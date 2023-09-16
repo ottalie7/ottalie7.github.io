@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet Map Example</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 1000px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+  <script>
+    // 放置地圖
+    let zoom = 10;
+    let center = [23, 120.3];
+    let map = L.map('map').setView(center, zoom);
+
+    // 添加地圖圖層
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap',
+      zoomControl: true
+    }).addTo(map);
+
+    // 讀取並解析文本檔案
+    fetch('For_NTU_SW.stninfo.txt')
+      .then(response => response.text())
+      .then(data => {
+        // 拆分數據行
+        let lines = data.split('\n');
+
+        // 添加標記
+        lines.forEach(line => {
+          let [type, name, latitude, longitude, height] = line.split(' ');
+
+          // 轉換經緯度為數字
+          let latLng = [parseFloat(latitude), parseFloat(longitude)];
+
+          // 創建標記並添加到地圖上
+          let marker = L.marker(latLng).addTo(map);
+
+          // 添加標記的彈出視窗
+          marker.bindPopup(`<b>${name}</b><br>種類: ${type}<br>高度: ${height}`);
+        });
+      })
+      .catch(error => console.log(error));
+  </script>
+</body>
+</html>
