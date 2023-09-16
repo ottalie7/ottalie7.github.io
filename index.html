@@ -3,6 +3,8 @@
 <head>
   <title>Leaflet Map Example</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
   <style>
     #map {
       height: 1000px;
@@ -47,6 +49,60 @@
         });
       })
       .catch(error => console.log(error));
+
+      var url = "https://www.geologycloud.tw/api/v1/zh-tw/Fault25?t=.json&bbox=119.5%2C22%2C121%2C24"
+
+    axios.get(url)
+        .then(function(result) {
+            L.geoJSON(result.data, {
+                onEachFeature: onEachFeature,
+                style: {
+                    weight: 1,
+                    opacity: 1,
+                    color: '#035BB2',
+                    fillColor: '#035BB2',
+                    fillOpacity: 0.5
+                }
+            }).addTo(map)
+        }).catch(function(error) {
+            console.log(error);
+        });
+
+    function onEachFeature(feature, layer) {
+        var pro = feature.properties;
+        var HTML = '';
+        for (var q in pro) {
+            HTML += q + ":" + pro[q] + '<br />';
+        }
+        layer.bindPopup(HTML);
+    }
+
+    var url = "https://www.geologycloud.tw/api/v1/zh-tw/Fold?t=.json&bbox=119.5%2C22%2C121%2C24"
+
+    axios.get(url)
+        .then(function(result) {
+            L.geoJSON(result.data, {
+                onEachFeature: onEachFeature,
+                style: {
+                    weight: 1,
+                    opacity: 1,
+                    color: '#035BB2',
+                    fillColor: '#035BB2',
+                    fillOpacity: 0.5
+                }
+            }).addTo(map)
+        }).catch(function(error) {
+            console.log(error);
+        });
+
+    function onEachFeature(feature, layer) {
+        var pro = feature.properties;
+        var HTML = '';
+        for (var q in pro) {
+            HTML += q + ":" + pro[q] + '<br />';
+        }
+        layer.bindPopup(HTML);
+    }
   </script>
 </body>
 </html>
